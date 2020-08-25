@@ -1,0 +1,36 @@
+.MuiPaper-elevation1 {
+  background-color: #e9ecef !important;
+}
+
+._showNotification {
+  color: black;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgb(168, 161, 161) !important;
+  margin: 0px !important;
+  padding: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+  font-size: 13px;
+}
+._showNotification:hover {
+  background-color: lightgray;
+  cursor: pointer;
+}
+
+.popup-content {
+  padding: 0px !important;
+  max-height: 450px;
+  overflow: hidden;
+  overflow-y: scroll;
+  background-color: white !important;
+}
+
+@media only screen and (max-width: 600px) {
+  ._title {
+    display: none !important;
+  }
+}
+/* _title */

@@ -1,0 +1,52 @@
+.email {
+  width: 90%;
+}
+
+.password {
+  width: 90%;
+}
+
+.loginBtn {
+  width: 30%;
+}
+
+.signupText {
+  font-weight: 500;
+}
+._tabbtn {
+  width: 100%;
+}
+/* 
+@media only screen and (max-width: 600px) {
+    ._grid {
+      padding-top: 90px;
+    }
+  } */
+
+
+  ._header_Section{
+    height:200px;
+    background-color: #01bafd;
+    border-bottom: 4px solid white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .admin_icon{
+    font-size: 140px !important;
+    color: white;
+  }
+
+
+  
+
+  @media only screen and (max-width: 600px) {
+    .admin_icon{
+      font-size: 100px !important;
+      color: white;
+    } 
+    ._header_Section{
+      height: 130px;
+    }
+  }
+  

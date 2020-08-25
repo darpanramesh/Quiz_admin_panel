@@ -1,0 +1,9 @@
+._popup {
+  width: 130px;
+  position: absolute;
+  right: 0;
+  border: 2px solid;
+  margin-top: 60px;
+  background-color: white;
+  /* display: none; */
+}

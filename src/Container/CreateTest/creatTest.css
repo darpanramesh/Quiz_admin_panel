@@ -1,0 +1,17 @@
+.sent_email{
+    height: 200px !important;
+    /* display: flex;
+    flex: 1;
+    flex-direction: column; */
+    
+    justify-content: center;
+    /* align-items: center; */
+    text-align: center;
+    font-size: 15px;
+    width: 300px;
+    margin-top: 150px;
+    /* background-color: rgb(244, 245, 244); */
+    color: rgb(59, 170, 77) !important;
+    font-weight: bold;
+    
+}

@@ -1,0 +1,10 @@
+._question{
+    width: 99%;
+    height: 100px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+._slelect{
+    width: 100% !important;
+    margin-bottom: 10px;
+}
