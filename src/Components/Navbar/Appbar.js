@@ -28,6 +28,7 @@ import StateIcon from './../../assets/apartment.png';
 import ClassIcon from './../../assets/class.png';
 import SubjectIcon from './../../assets/subject.png';
 import QuestionIcon from './../../assets/question.png';
+import classroomIcon from './../../assets/classroom.png'
 
 import "./Appbar.css";
 const useStyles = makeStyles((theme) => ({
@@ -203,6 +204,9 @@ export default function PrimarySearchAppBar(props) {
         <List>
           <ListItem button onClick={() => props.props.push('/instruction')} style={{ padding: "10px" }}>
             <img src={DashboardIcon} width="25px" /> <span style={{ marginLeft: '20px', color: "#08a0d3", fontFamily: "'Source Sans Pro', sans-serif", fontSize: 20 }}>Dashboard</span>
+          </ListItem>
+          <ListItem button onClick={() => props.props.push('/AllClasses')} style={{ padding: "10px" }}>
+            <img src={classroomIcon} width="25px" />  <span style={{ marginLeft: '20px', color: "#08a0d3", fontFamily: "'Source Sans Pro', sans-serif", fontSize: 20 }}>All Classes</span>
           </ListItem>
           <ListItem button onClick={() => props.props.push('/AddState')} style={{ padding: "10px" }}>
             <img src={StateIcon} width="25px" />  <span style={{ marginLeft: '20px', color: "#08a0d3", fontFamily: "'Source Sans Pro', sans-serif", fontSize: 20 }}>Add State</span>

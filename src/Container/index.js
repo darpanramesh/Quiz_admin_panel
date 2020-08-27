@@ -14,6 +14,7 @@ import AddCategory from './Add Category/AddCategory'
 import CategoryClass from './CategoryClass/CategoryClass'
 import AddChapter from './Add Chapter/AddChapter'
 import ChapterSubject from './Chapter Subject/ChapterSubject'
+import AllClasses from './All Classes/allclasses'
 export {
   Login,
   Category,
@@ -30,5 +31,6 @@ export {
   AddCategory,
   CategoryClass,
   AddChapter,
-  ChapterSubject
+  ChapterSubject,
+  AllClasses
 };

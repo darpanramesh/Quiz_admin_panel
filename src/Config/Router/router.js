@@ -15,6 +15,7 @@ import {
   CategoryClass,
   AddCategory,
   AddChapter,
+  AllClasses,
   ChapterSubject
 } from "./../../Container";
 // import { StudentLogin, StudentSignup,RenderQuiz,QuizSelected, QuizRoom,QuizTaken } from './../../Student Access/Container'
@@ -40,7 +41,7 @@ export default class AppRouter extends React.Component {
           <Route path="/ClassCategory" component={CategoryClass} />
           <Route path="/AddChapter" component={AddChapter} />
           <Route path="/ChapterSubject" component={ChapterSubject} />
-
+          <Route path='/AllClasses' component={AllClasses} />
 
 
 

@@ -32,6 +32,7 @@ export default class AddSubject extends React.Component {
     this.state = {
       instruction: false,
       file: false,
+      videoUrl: false,
       cols: '',
       rows: '',
       Questions: [],
@@ -51,6 +52,8 @@ export default class AddSubject extends React.Component {
       pdf: false,
       pdfFile: '',
       level: false,
+      linkUrl: false,
+      SelectQuestions:false,
       alllevels: [
         { level: 'level 1' }, { level: 'level 2' }, { level: 'level 3' }, { level: 'level 4' }, { level: 'level 5' },
         { level: 'level 6' }, { level: 'level 7' }, { level: 'level 8' }, { level: 'level 9' }, { level: 'level 10' },
@@ -115,7 +118,7 @@ export default class AddSubject extends React.Component {
     // });
   };
   fileHandler = (event) => {
-    let { Questions } = this.state
+    let { questionLength } = this.state
     let fileObj = event.target.files[0];
 
     //just pass the fileObj as parameter
@@ -169,28 +172,39 @@ export default class AddSubject extends React.Component {
   }
 
   videoHandler = async (e) => {
-    console.log(e.target.files[0]);
-    let fileName = e.target.files[0].name;
-    let ref = firebaseApp.storage().ref('/').child(`Videos/${fileName}`);
-    await ref.put(e.target.files[0])
-    await ref.getDownloadURL().then((url) => {
-      console.log(url);
-      alert("Video added successfully!")
-      this.setState({ video: url, file: true, })
-    })
+    if (e.target.files[0].type === 'video/mp4') {
+      console.log(e.target.files[0]);
+      let fileName = e.target.files[0].name;
+      let ref = firebaseApp.storage().ref('/').child(`Videos/${fileName}`);
+      await ref.put(e.target.files[0])
+      await ref.getDownloadURL().then((url) => {
+        console.log(url);
+        alert("Video added successfully!")
+        this.setState({ video: url, file: true, })
+      })
+    }
+    else {
+      alert("Only upload video")
+    }
   }
 
 
   pdfHandler = async (e) => {
     console.log(e.target.files[0]);
-    let fileName = e.target.files[0].name;
-    let ref = firebaseApp.storage().ref('/').child(`Pdf/${fileName}`);
-    await ref.put(e.target.files[0])
-    await ref.getDownloadURL().then((url) => {
-      console.log(url);
-      alert("Pdf added successfully!")
-      this.setState({ pdfFile: url, file: true, })
-    })
+    if(e.target.files[0].type === 'application/pdf'){
+      let fileName = e.target.files[0].name;
+      let ref = firebaseApp.storage().ref('/').child(`Pdf/${fileName}`);
+      await ref.put(e.target.files[0])
+      await ref.getDownloadURL().then((url) => {
+        console.log(url);
+        alert("Pdf added successfully!")
+        this.setState({ pdfFile: url, file: true, })
+      })
+    }
+    else{
+      alert('Only upload PDF file')
+    }
+
   }
   selectClass = (event) => {
     let { allcategories } = this.state;
@@ -283,8 +297,18 @@ export default class AddSubject extends React.Component {
   }
 
   addQuiz = () => {
-    let { selectCategory, selectClass, selectLevel, selectChapter, Questions, selectSubject } = this.state;
-    database.child(`Classes/${selectClass}/Category/${selectCategory}/Subjects/${selectSubject}/Chapters/${selectChapter}/Levels/${selectLevel}/Questions`).push(Questions);
+    let {questionLength, selectCategory, selectClass, selectLevel, selectChapter, Questions, selectSubject } = this.state;
+    database.child(`Classes/${selectClass}/Category/${selectCategory}/Subjects/${selectSubject}/Chapters/${selectChapter}/Levels`).on("child_added", (value) => {
+      let x = value.val();
+      x.id = value.key;
+      let id = value.key;
+      console.log(x);
+      let obj= {
+        Questions:Questions,
+        totalQuiz:questionLength
+      }
+      database.child(`Classes/${selectClass}/Category/${selectCategory}/Subjects/${selectSubject}/Chapters/${selectChapter}/Levels/${id}/Questions`).push(obj);
+    })
     alert("Quiz Added Successfully");
     this.props.history.push("/");
   }
@@ -398,7 +422,12 @@ export default class AddSubject extends React.Component {
                         id="demo-simple-select-outlined"
                         value={this.state.selectLevel}
                         onChange={(event) => {
-                          this.setState({ selectLevel: event.target.value });
+                          let { selectCategory, selectClass, selectLevel, selectChapter, Questions, selectSubject } = this.state;
+                          let obj = {
+                            level: event.target.value
+                          }
+                          database.child(`Classes/${selectClass}/Category/${selectCategory}/Subjects/${selectSubject}/Chapters/${selectChapter}/Levels`).push(obj);
+                          this.setState({ selectLevel: event.target.value,SelectQuestions:true });
                         }}
                         label="Select Class"
                       >
@@ -410,7 +439,103 @@ export default class AddSubject extends React.Component {
                     </FormControl>
                     : null}
 
+                    {this.state.SelectQuestions ?
+                    <FormControl variant="outlined" style={{ width: "100%", marginTop: 20 }}>
+                      <InputLabel id="demo-simple-select-outlined-label" style={{ marginLeft: "5%" }}>Select Questions </InputLabel>
+                      <Select
+                        autoWidth={true}
+                        style={{ width: "90%", margin: "auto" }}
+                        labelId="demo-simple-select-outlined-label"
+                        id="demo-simple-select-outlined"
+                        value={this.state.videoType}
+                        onChange={(event) => {
+                          if (event.target.value === '10questions') {
+                            this.setState({ questionLength:10 })
+                          }
+                          if (event.target.value === '20questions') {
+                            this.setState({ questionLength:20 })
+                          }
+                          if (event.target.value === '30questions') {
+                            this.setState({ questionLength:30 })
+                          }
+                          if (event.target.value === '40questions') {
+                            this.setState({ questionLength:40 })
+                          }
+                        }}
+                        label="Select Class"
+                      >
+                        <MenuItem style={{ width: 600 }} value='10questions'>10 Questions</MenuItem>
+                        <MenuItem style={{ width: 600 }} value='20questions'>20 Questions</MenuItem>
+                        <MenuItem style={{ width: 600 }} value='30questions'>30 Questions</MenuItem>
+                        <MenuItem style={{ width: 600 }} value='40questions'>40 Questions</MenuItem>
+                      </Select>
+                    </FormControl>
+                    : null}
+
                   {this.state.video1 ?
+                    <FormControl variant="outlined" style={{ width: "100%", marginTop: 20 }}>
+                      <InputLabel id="demo-simple-select-outlined-label" style={{ marginLeft: "5%" }}>Select Video Type </InputLabel>
+                      <Select
+                        autoWidth={true}
+                        style={{ width: "90%", margin: "auto" }}
+                        labelId="demo-simple-select-outlined-label"
+                        id="demo-simple-select-outlined"
+                        value={this.state.pdfType}
+                        onChange={(event) => {
+                          if (event.target.value === 'VideoUpload') {
+                            this.setState({ videoUrl: true,pdfType:event.target.value,linkUrl:false })
+                          }
+                          if (event.target.value === 'Link') {
+                            this.setState({ linkUrl: true,pdfType:event.target.value,videoUrl:false })
+                          }
+                        }}
+                        label="Select Class"
+                      >
+                        <MenuItem style={{ width: 600 }} value='VideoUpload'>Video Upload</MenuItem>
+                        <MenuItem style={{ width: 600 }} value='Link'>Link</MenuItem>
+                      </Select>
+                    </FormControl>
+                    : null}
+
+                    {this.state.pdf ?
+                    <FormControl variant="outlined" style={{ width: "100%", marginTop: 20 }}>
+                      <InputLabel id="demo-simple-select-outlined-label" style={{ marginLeft: "5%" }}>Select PDF Type </InputLabel>
+                      <Select
+                        autoWidth={true}
+                        style={{ width: "90%", margin: "auto" }}
+                        labelId="demo-simple-select-outlined-label"
+                        id="demo-simple-select-outlined"
+                        value={this.state.videoType}
+                        onChange={(event) => {
+                          if (event.target.value === 'pdfUpload') {
+                            this.setState({ pdfFile: true,pdfType:event.target.value,pdfLink:false })
+                          }
+                          if (event.target.value === 'pdflink') {
+                            this.setState({ pdfLink: true,pdfType:event.target.value,pdfFile:false })
+                          }
+                        }}
+                        label="Select Class"
+                      >
+                        <MenuItem style={{ width: 600 }} value='pdfUpload'>PDF Upload</MenuItem>
+                        <MenuItem style={{ width: 600 }} value='pdflink'>PDF Link</MenuItem>
+                      </Select>
+                    </FormControl>
+                    : null}
+
+                  {this.state.linkUrl ?
+                    <TextField
+                      label="add Video Link"
+                      id="outlined-margin-dense"
+                      margin="dense"
+                      variant="outlined"
+                      style={{ width: "90%", marginTop: 20, marginLeft: "5%" }}
+                      value={this.state.chapters}
+                      type="text"
+                      onChange={(e) => this.setState({ url: e.target.value, file: true })}
+                    />
+                    : null}
+
+                  {this.state.videoUrl ?
                     <TextField
                       id="outlined-margin-dense"
                       margin="dense"
@@ -434,8 +559,19 @@ export default class AddSubject extends React.Component {
                       style={{ width: "90%", marginTop: 20, marginLeft: "5%", marginTop: 20 }}
                     /> :
                     null}
-
-                  {this.state.pdf ?
+                  {this.state.pdfLink ?
+                    <TextField
+                      label="add PDf Link"
+                      id="outlined-margin-dense"
+                      margin="dense"
+                      variant="outlined"
+                      style={{ width: "90%", marginTop: 20, marginLeft: "5%" }}
+                      value={this.state.chapters}
+                      type="text"
+                      onChange={(e) => this.setState({ url: e.target.value, file: true })}
+                    />
+                    : null}
+                  {this.state.pdfFile ?
                     <TextField
                       id="outlined-margin-dense"
                       margin="dense"

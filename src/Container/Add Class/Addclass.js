@@ -72,7 +72,9 @@ export default class AddClass extends React.Component {
         let { className } = this.state
         let database = firebaseApp.database().ref("/");
         let obj = {
-            class: className
+            class: className,
+            disable:true,
+            status:'active'
         }
         database.child("Classes/").push(obj);
         this.setState({
